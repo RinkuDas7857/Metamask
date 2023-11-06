@@ -2022,6 +2022,12 @@
   "importAccountMsg": {
     "message": "Imported accounts won’t be associated with your MetaMask Secret Recovery Phrase. Learn more about imported accounts"
   },
+  "importExitConfirmation": {
+    "message": "Your search information will not be saved."
+  },
+  "importExitHeader": {
+    "message": "Are you sure you want to exit?"
+  },
   "importMyWallet": {
     "message": "Import my wallet"
   },
@@ -2051,6 +2057,9 @@
   },
   "importTokensCamelCase": {
     "message": "Import tokens"
+  },
+  "importTokensError": {
+    "message": "We could not import the tokens. Please try again later."
   },
   "importWithCount": {
     "message": "Import $1",
@@ -2313,6 +2322,9 @@
   },
   "lightTheme": {
     "message": "Light"
+  },
+  "likeToImportToken": {
+    "message": "Would you like to import this token?"
   },
   "likeToImportTokens": {
     "message": "Would you like to import these tokens?"
@@ -3945,9 +3957,6 @@
   },
   "searchAccounts": {
     "message": "Search accounts"
-  },
-  "searchResults": {
-    "message": "Search results"
   },
   "secretRecoveryPhrase": {
     "message": "Secret Recovery Phrase"

@@ -3493,9 +3493,6 @@
   "searchAccounts": {
     "message": "アカウントを検索"
   },
-  "searchResults": {
-    "message": "検索結果"
-  },
   "secretRecoveryPhrase": {
     "message": "シークレットリカバリーフレーズ"
   },

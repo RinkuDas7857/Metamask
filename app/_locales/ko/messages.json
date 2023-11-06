@@ -3493,9 +3493,6 @@
   "searchAccounts": {
     "message": "계정 검색"
   },
-  "searchResults": {
-    "message": "검색 결과"
-  },
   "secretRecoveryPhrase": {
     "message": "비밀복구구문"
   },

@@ -3493,9 +3493,6 @@
   "searchAccounts": {
     "message": "Maghanap ng mga account"
   },
-  "searchResults": {
-    "message": "Mga resulta ng paghahanap"
-  },
   "secretRecoveryPhrase": {
     "message": "Lihim na Parirala sa Pagbawi"
   },
