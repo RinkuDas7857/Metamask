@@ -1,5 +1,9 @@
 import { ethErrors } from 'eth-rpc-errors';
 import { MESSAGE_TYPE } from '../../../../../shared/constants/app';
+import {
+  MetaMetricsEventName,
+  MetaMetricsEventCategory,
+} from '../../../../../shared/constants/metametrics';
 
 /**
  * This method attempts to retrieve the Ethereum accounts available to the
@@ -18,6 +22,8 @@ const requestEthereumAccounts = {
     getUnlockPromise: true,
     hasPermission: true,
     requestAccountsPermission: true,
+    sendMetrics: true,
+    getPermissionsForOrigin: true,
   },
 };
 export default requestEthereumAccounts;
@@ -57,6 +63,8 @@ async function requestEthereumAccountsHandler(
     getUnlockPromise,
     hasPermission,
     requestAccountsPermission,
+    sendMetrics,
+    getPermissionsForOrigin,
   },
 ) {
   if (locks.has(origin)) {
@@ -96,6 +104,22 @@ async function requestEthereumAccountsHandler(
   /* istanbul ignore else: too hard to induce, see below comment */
   if (accounts.length > 0) {
     res.result = accounts;
+    const numberOfConnectedAccounts =
+      getPermissionsForOrigin(origin).eth_accounts.caveats[0].value
+        .length;
+    sendMetrics({
+      event: MetaMetricsEventName.DappViewed,
+      category: MetaMetricsEventCategory.InpageProvider,
+      referrer: {
+        url: origin,
+      },
+      properties: {
+        isFirstVisit: true,
+        // TODO: Check total number of accounts
+        number_of_accounts: accounts.length,
+        number_of_accounts_connected: numberOfConnectedAccounts,
+      },
+    });
   } else {
     // This should never happen, because it should be caught in the
     // above catch clause

@@ -28,6 +28,7 @@ import {
   ENVIRONMENT_TYPE_FULLSCREEN,
   EXTENSION_MESSAGES,
   PLATFORM_FIREFOX,
+  MESSAGE_TYPE,
   ///: BEGIN:ONLY_INCLUDE_IN(keyring-snaps)
   SNAP_MANAGE_ACCOUNTS_CONFIRMATION_TYPES,
   ///: END:ONLY_INCLUDE_IN
@@ -101,8 +102,10 @@ let notificationIsOpen = false;
 let uiIsTriggering = false;
 const openMetamaskTabsIDs = {};
 const requestAccountTabIds = {};
+const tabOriginMapping = {};
 let controller;
 let versionedData;
+let visitedSiteData = {};
 
 if (inTest || process.env.METAMASK_DEBUG) {
   global.stateHooks.metamaskGetState = localStore.get.bind(localStore);
@@ -200,7 +203,6 @@ browser.runtime.onConnect.addListener(async (...args) => {
 browser.runtime.onConnectExternal.addListener(async (...args) => {
   // Queue up connection attempts here, waiting until after initialization
   await isInitialized;
-
   // This is set in `setupController`, which is called as part of initialization
   connectExternal(...args);
 });
@@ -450,6 +452,37 @@ export async function loadStateFromPersistence() {
 }
 
 /**
+ * Emit event of DappViewed
+ *
+ * @param {string} origin - URL of visited dapp
+ * @param {object} connectSitePermissions - Permission state to get connected accounts
+ * @param {object} preferencesController - Preference Controller to get total created accounts
+ */
+function emitDappViewedMetricEvent({
+  origin,
+  connectSitePermissions,
+  preferencesController,
+}) {
+  const numberOfTotalAccounts = Object.keys(
+    preferencesController.store.getState().identities,
+  ).length;
+  const numberOfConnectedAccounts =
+    connectSitePermissions.permissions.eth_accounts.caveats[0].value.length;
+  controller.metaMetricsController.trackEvent({
+    event: MetaMetricsEventName.DappViewed,
+    category: MetaMetricsEventCategory.InpageProvider,
+    referrer: {
+      url: origin,
+    },
+    properties: {
+      isFirstVisit: false,
+      number_of_accounts: numberOfTotalAccounts,
+      number_of_accounts_connected: numberOfConnectedAccounts,
+    },
+  });
+}
+
+/**
  * Initializes the MetaMask Controller with any initial state and default language.
  * Configures platform-specific error reporting strategy.
  * Streams emitted state updates to platform-specific storage strategy.
@@ -660,13 +693,20 @@ export function setupController(
         connectionStream: portStream,
       });
     } else {
+      // this is triggered when a new tab is opened, or origin(url) is changed
       if (remotePort.sender && remotePort.sender.tab && remotePort.sender.url) {
         const tabId = remotePort.sender.tab.id;
         const url = new URL(remotePort.sender.url);
         const { origin } = url;
 
+        // used to map tabId and origin without giving permission to tabs in manifest file
+        tabOriginMapping[tabId] = origin;
+
         remotePort.onMessage.addListener((msg) => {
-          if (msg.data && msg.data.method === 'eth_requestAccounts') {
+          if (
+            msg.data &&
+            msg.data.method === MESSAGE_TYPE.ETH_REQUEST_ACCOUNTS
+          ) {
             requestAccountTabIds[origin] = tabId;
           }
         });
@@ -915,6 +955,51 @@ async function onInstall() {
     addAppInstalledEvent();
     platform.openExtensionInBrowser();
   }
+
+  // If account is connected to dapp, sent "dapp viewed" metrics when refreshing, navigating and opening a tab
+  // browser.tabs.onActivated.addListener would listen navigating to the existing dapp
+
+
+  // TODO: To fix - Open a new tab will call twice
+  // TODO: Disconnect will clear all
+  // ------------ Dapp Viewed Metric event ------------
+  const connectSitePermissions =
+    controller.permissionController.state.subjects[origin];
+  // when the dapp is not connected, connectSitePermissions is undefined
+  const isConnectedToDapp = connectSitePermissions !== undefined;
+
+  // change url or open a tab and fill in dapp address
+  browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+    if (changeInfo.status === 'complete') {
+      console.log({ tabOriginMapping });
+      //  TODO: When tab is closed, clean the `tabOriginMapping`
+      // Check if is a connection to dapp, then send events
+
+      // visitedSiteData[origin] === undefined represents navigating to a connected site
+      // visitedSiteData[origin].hasSentDappEvents represent refresh
+      // if (
+      //   isConnectedToDapp &&
+      //   (visitedSiteData[origin] === undefined ||
+      //     !visitedSiteData[origin].hasSentDappEvents)
+      // ) {
+      //   console.log('visitedSiteData sending events');
+      //   visitedSiteData = {
+      //     ...visitedSiteData,
+      //     [origin]: { hasSentDappEvents: false },
+      //   };
+      //   emitDappViewedMetricEvent({
+      //     origin,
+      //     connectSitePermissions,
+      //     preferencesController: controller.preferencesController,
+      //   });
+      //   visitedSiteData[origin].hasSentDappEvents = true;
+      // }
+      // console.log('after', visitedSiteData[origin]);
+      // ------------------------------------------------
+    }
+  });
+  // onActivated is switch between tabs
+
 }
 
 function setupSentryGetStateGlobal(store) {
