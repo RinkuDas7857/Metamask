@@ -1206,6 +1206,11 @@ export function getSortedAnnouncementsToShow(state) {
 export function getOrderedNetworksList(state) {
   return state.metamask.orderedNetworkList;
 }
+
+export function getPinnedAccountsList(state) {
+  return state.metamask.pinnedAccountList;
+}
+
 export function getShowRecoveryPhraseReminder(state) {
   const {
     recoveryPhraseReminderLastShown,
