@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import * as actions from '../../../../store/actions';
 import { DEFAULT_ROUTE } from '../../../../helpers/constants/routes';
 import {
@@ -8,16 +9,21 @@ import {
   ButtonSecondary,
   ButtonPrimary,
   Box,
+  Modal,
+  ModalContent,
+  ModalOverlay,
 } from '../../../component-library';
 import {
   TextAlign,
   FontWeight,
   TextVariant,
   Size,
+  Display,
 } from '../../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../../hooks/useI18nContext';
 
-export default function ImportTokensExitModal() {
+// export default function ImportTokensExitModal() {
+export const ImportTokensExitModal = ({ onClose }) => {
   const t = useI18nContext();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -28,51 +34,65 @@ export default function ImportTokensExitModal() {
     });
   };
 
-  const hideModal = () => dispatch(actions.hideModal());
-
   const forceHideModal = () => {
     later(0).then(() => {
       dispatch(actions.clearPendingTokens());
-      dispatch(actions.hideModal());
+      onClose();
     });
   };
 
   return (
-    <div className="exit-token-confirmation">
-      <div className="exit-token-confirmation__container">
-        <Text
-          textAlign={TextAlign.Center}
-          fontWeight={FontWeight.Bold}
-          variant={TextVariant.bodyMd}
-        >
-          {t('importExitHeader')}
-        </Text>
-        <Box marginTop={5} className="exit-token-confirmation__title">
-          {t('importExitConfirmation')}
-        </Box>
+    <Modal
+      isOpen
+      onClose={() => {
+        onClose();
+      }}
+    >
+      <ModalOverlay />
+      <ModalContent className="top-class">
+        <Box>
+          <Text
+            textAlign={TextAlign.Center}
+            fontWeight={FontWeight.Bold}
+            variant={TextVariant.bodyMd}
+          >
+            {t('importExitHeader')}
+          </Text>
+          <Text
+            marginTop={5}
+            textAlign={TextAlign.Center}
+            variant={TextVariant.bodyMd}
+          >
+            {t('importExitConfirmation')}
+          </Text>
 
-        <div className="exit-token-confirmation__buttons">
-          <ButtonSecondary
-            data-testid="exit-token-confirmation__back"
-            size={Size.LG}
-            onClick={() => hideModal()}
-            block
-          >
-            {t('back')}
-          </ButtonSecondary>
-          <ButtonPrimary
-            size={Size.LG}
-            data-testid="exit-token-confirmation__confirm"
-            onClick={() => {
-              forceHideModal();
-              history.push(DEFAULT_ROUTE);
-            }}
-            block
-          >
-            {t('confirm')}
-          </ButtonPrimary>
-        </div>
-      </div>
-    </div>
+          <Box display={Display.Flex} marginTop={5} gap={4}>
+            <ButtonSecondary
+              data-testid="exit-token-confirmation__back"
+              size={Size.LG}
+              onClick={() => onClose()}
+              block
+            >
+              {t('back')}
+            </ButtonSecondary>
+            <ButtonPrimary
+              size={Size.LG}
+              data-testid="exit-token-confirmation__confirm"
+              onClick={() => {
+                forceHideModal();
+                history.push(DEFAULT_ROUTE);
+              }}
+              block
+            >
+              {t('confirm')}
+            </ButtonPrimary>
+          </Box>
+        </Box>
+      </ModalContent>
+    </Modal>
   );
-}
+};
+
+ImportTokensExitModal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+};

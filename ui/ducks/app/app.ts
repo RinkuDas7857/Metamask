@@ -39,6 +39,7 @@ interface AppState {
   };
   showKeyringRemovalSnapModal: boolean;
   importTokensModalOpen: boolean;
+  importTokensExitModalOpen: boolean;
   showSelectActionModal: boolean;
   accountDetail: {
     subview?: string;
@@ -116,6 +117,7 @@ const initialState: AppState = {
   },
   showKeyringRemovalSnapModal: false,
   importTokensModalOpen: false,
+  importTokensExitModalOpen: false,
   showSelectActionModal: false,
   accountDetail: {
     privateKey: '',
@@ -225,6 +227,17 @@ export default function reduceApp(
       return {
         ...appState,
         importTokensModalOpen: false,
+      };
+    case actionConstants.IMPORT_TOKENS_EXIT_POPOVER_OPEN:
+      return {
+        ...appState,
+        importTokensExitModalOpen: true,
+      };
+
+    case actionConstants.IMPORT_TOKENS_EXIT_POPOVER_CLOSE:
+      return {
+        ...appState,
+        importTokensExitModalOpen: false,
       };
 
     case actionConstants.SELECT_ACTION_MODAL_OPEN:

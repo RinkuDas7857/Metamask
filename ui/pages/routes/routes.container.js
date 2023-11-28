@@ -25,7 +25,8 @@ import {
   toggleAccountMenu,
   toggleNetworkMenu,
   hideImportTokensModal,
-  ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
+  hideImportTokensExitModal,
+  ///: BEGIN:ONLY_INCLUDE_IN(keyring-snaps)
   hideKeyringRemovalResultModal,
   ///: END:ONLY_INCLUDE_IF
 } from '../../store/actions';
@@ -74,6 +75,7 @@ function mapStateToProps(state) {
     isAccountMenuOpen: state.metamask.isAccountMenuOpen,
     isNetworkMenuOpen: state.metamask.isNetworkMenuOpen,
     isImportTokensModalOpen: state.appState.importTokensModalOpen,
+    isImportTokensExitModalOpen: state.appState.importTokensExitModalOpen,
     accountDetailsAddress: state.appState.accountDetailsAddress,
     isImportNftsModalOpen: state.appState.importNftsModal.open,
     isIpfsModalOpen: state.appState.showIpfsModalOpen,
@@ -98,6 +100,7 @@ function mapDispatchToProps(dispatch) {
     hideImportNftsModal: () => dispatch(hideImportNftsModal()),
     hideIpfsModal: () => dispatch(hideIpfsModal()),
     hideImportTokensModal: () => dispatch(hideImportTokensModal()),
+    hideImportTokensExitModal: () => dispatch(hideImportTokensExitModal()),
     hideSelectActionModal: () => dispatch(hideSelectActionModal()),
     ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
     hideShowKeyringSnapRemovalResultModal: () =>

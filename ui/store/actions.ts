@@ -2431,6 +2431,18 @@ export function hideImportTokensModal(): Action {
   };
 }
 
+export function showImportTokensExitModal(): Action {
+  return {
+    type: actionConstants.IMPORT_TOKENS_EXIT_POPOVER_OPEN,
+  };
+}
+
+export function hideImportTokensExitModal(): Action {
+  return {
+    type: actionConstants.IMPORT_TOKENS_EXIT_POPOVER_CLOSE,
+  };
+}
+
 type ModalPayload = { name: string } & Record<string, any>;
 
 export function showModal(payload: ModalPayload): PayloadAction<ModalPayload> {

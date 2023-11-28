@@ -14,7 +14,7 @@ import {
   clearPendingTokens,
   setNewTokensImported,
   setNewTokensImportedError,
-  showModal,
+  showImportTokensExitModal,
 } from '../../store/actions';
 import {
   MetaMetricsEventCategory,
@@ -400,11 +400,7 @@ const ImportTokens = () => {
               dispatch(clearPendingTokens());
               history.push(DEFAULT_ROUTE);
             } else {
-              dispatch(
-                showModal({
-                  name: 'IMPORT_TOKEN_EXIT_MODAL',
-                }),
-              );
+              dispatch(showImportTokensExitModal());
             }
           }}
           size={ButtonIconSize.Sm}

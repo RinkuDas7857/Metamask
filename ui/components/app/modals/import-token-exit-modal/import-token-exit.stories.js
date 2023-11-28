@@ -1,5 +1,6 @@
 import React from 'react';
-import ImportTokensExitModal from '.';
+
+import { ImportTokensExitModal } from './import-token-exit-modal';
 
 export default {
   title: 'Components/App/Modals/ImportTokensExitModal',

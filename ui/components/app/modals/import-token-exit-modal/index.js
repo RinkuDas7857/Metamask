@@ -1,1 +1,1 @@
-export { default } from './import-token-exit-modal';
+export { ImportTokensExitModal } from './import-token-exit-modal';

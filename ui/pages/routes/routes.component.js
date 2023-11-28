@@ -136,6 +136,7 @@ import KeyringSnapRemovalResult from '../../components/app/modals/keyring-snap-r
 ///: END:ONLY_INCLUDE_IF
 
 import { SendPage } from '../../components/multichain/pages/send';
+import { ImportTokensExitModal } from '../../components/app/modals/import-token-exit-modal';
 
 export default class Routes extends Component {
   static propTypes = {
@@ -180,6 +181,8 @@ export default class Routes extends Component {
     hideIpfsModal: PropTypes.func.isRequired,
     isImportTokensModalOpen: PropTypes.bool.isRequired,
     hideImportTokensModal: PropTypes.func.isRequired,
+    isImportTokensExitModalOpen: PropTypes.bool.isRequired,
+    hideImportTokensExitModal: PropTypes.func.isRequired,
     isSelectActionModalOpen: PropTypes.bool.isRequired,
     hideSelectActionModal: PropTypes.func.isRequired,
     ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
@@ -594,6 +597,7 @@ export default class Routes extends Component {
       toggleNetworkMenu,
       accountDetailsAddress,
       isImportTokensModalOpen,
+      isImportTokensExitModalOpen,
       isSelectActionModalOpen,
       location,
       isImportNftsModalOpen,
@@ -601,6 +605,7 @@ export default class Routes extends Component {
       isIpfsModalOpen,
       hideIpfsModal,
       hideImportTokensModal,
+      hideImportTokensExitModal,
       hideSelectActionModal,
       ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
       isShowKeyringSnapRemovalResultModal,
@@ -679,6 +684,9 @@ export default class Routes extends Component {
         ) : null}
         {isImportTokensModalOpen ? (
           <ImportTokensModal onClose={() => hideImportTokensModal()} />
+        ) : null}
+        {isImportTokensExitModalOpen ? (
+          <ImportTokensExitModal onClose={() => hideImportTokensExitModal()} />
         ) : null}
         {isSelectActionModalOpen ? (
           <SelectActionModal onClose={() => hideSelectActionModal()} />
