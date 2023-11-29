@@ -8,8 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [11.7.0]
 ### Added
-- Implemented tabbed interface for accounts and contacts for send flow ([#21729] (https://github.com/MetaMask/metamask-extension/pull/21729))
-- Added amount error text when trying to send amount exceeds balance ([#21842](https://github.com/MetaMask/metamask-extension/pull/21842))
 - Added auto suggest ticker symbols for network form ([#21843](https://github.com/MetaMask/metamask-extension/pull/21843))
 - [MMI] Added a new button to "Continue to wallet" ([#21838](https://github.com/MetaMask/metamask-extension/pull/21838))
 - [FLASK] Enabled snaps home page feature ([#21581](https://github.com/MetaMask/metamask-extension/pull/21581))
