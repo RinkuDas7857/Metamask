@@ -28,19 +28,6 @@ export const ImportTokensExitModal = ({ onClose }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const later = (delay) => {
-    return new Promise(function (resolve) {
-      setTimeout(resolve, delay);
-    });
-  };
-
-  const forceHideModal = () => {
-    later(0).then(() => {
-      dispatch(actions.clearPendingTokens());
-      onClose();
-    });
-  };
-
   return (
     <Modal
       isOpen
@@ -79,7 +66,8 @@ export const ImportTokensExitModal = ({ onClose }) => {
               size={Size.LG}
               data-testid="exit-token-confirmation__confirm"
               onClick={() => {
-                forceHideModal();
+                dispatch(actions.clearPendingTokens());
+                onClose();
                 history.push(DEFAULT_ROUTE);
               }}
               block

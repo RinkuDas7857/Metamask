@@ -21,6 +21,7 @@ import {
   FontWeight,
   Display,
   AlignItems,
+  FlexDirection,
 } from '../../helpers/constants/design-system';
 import { getPendingTokens } from '../../ducks/metamask/metamask';
 import TokenBalance from '../../components/ui/token-balance/token-balance';
@@ -39,7 +40,11 @@ const ImportTokensConfirmation = () => {
           : t('likeToImportTokens')}
       </Text>
       <Box marginTop={12} className="scrollable">
-        <Box display={Display.Flex} className="tokens-container">
+        <Box
+          flexDirection={FlexDirection.Column}
+          marginLeft={4}
+          marginRight={4}
+        >
           {Object.entries(pendingTokens).map(([address, token]) => {
             const { name, symbol, iconUrl } = token;
             return (

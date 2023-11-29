@@ -48,6 +48,7 @@ import {
   ButtonLink,
   ///: END:ONLY_INCLUDE_IF
   Text,
+  Icon,
 } from '../../components/component-library';
 
 import {
@@ -546,7 +547,7 @@ export default class Home extends PureComponent {
             onAutoHide={onAutoHide}
             message={
               <Box display={Display.InlineFlex}>
-                <i className="fa fa-check-circle home__new-nft-notification-icon" />
+                <Icon name={IconName.Danger} />
                 <Text variant={TextVariant.bodySm} as="h6">
                   {t('importTokensError')}
                 </Text>
