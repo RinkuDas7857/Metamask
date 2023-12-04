@@ -45,6 +45,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the alignment of the NFT send button([#21829](https://github.com/MetaMask/metamask-extension/pull/21829))
 - Fixed the warning copy when adding a custom network with an existing currency symbol ([#21500](https://github.com/MetaMask/metamask-extension/pull/21500))
 
+## [11.6.3]
+### Fixed
+- Fixed a problem related with passing the wrong method name to TransactionController ([#22102](https://github.com/MetaMask/metamask-extension/pull/22102))
+
+## [11.6.2]
+### Fixed
+- Fixed a problem with including links in Snaps custom UI ([#22086](https://github.com/MetaMask/metamask-extension/pull/22086))
+
+## [11.6.1]
+### Fixed
+- Updates MMI extension package to the latest version since it includes a fix for the Tx status from custodian transactions. ([#22065](https://github.com/MetaMask/metamask-extension/pull/22065))
+
 ## [11.6.0]
 ### Added
 - Introduced the Swedish Krona (SEK) as an available currency option. ([21782](https://github.com/MetaMask/metamask-extension/pull/21782))
