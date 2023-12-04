@@ -1,8 +1,7 @@
 import { StyleUtilityProps } from '../../../component-library/box';
 import { ButtonProps } from '../../../component-library/button';
 
-export interface FooterProps
-  extends Omit<StyleUtilityProps, 'className'> {
+export interface FooterProps extends Omit<StyleUtilityProps, 'className'> {
   /**
    * Additional className to assign the ConfirmFooter component
    */

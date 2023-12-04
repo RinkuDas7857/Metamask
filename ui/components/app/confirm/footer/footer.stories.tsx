@@ -1,10 +1,8 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import type { StoryObj } from '@storybook/react';
-import { Footer } from '.';
 import configureStore from '../../../../store/store';
 import mockState from '../../../../../test/data/mock-state.json';
-
+import { Footer } from '.';
 
 const store = configureStore({
   metamask: {

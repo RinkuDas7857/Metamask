@@ -1,4 +1,5 @@
 import React from 'react';
+import classnames from 'classnames';
 import {
   Box,
   Button,
@@ -11,9 +12,8 @@ import {
   FlexDirection,
 } from '../../../../helpers/constants/design-system';
 import { useI18nContext } from '../../../../hooks/useI18nContext';
-import { FooterProps } from './footer.types';
 import { BoxProps } from '../../../component-library/box';
-import classnames from 'classnames';
+import { FooterProps } from './footer.types';
 
 const Footer: React.FC<FooterProps> = ({
   className = '',
@@ -34,7 +34,6 @@ const Footer: React.FC<FooterProps> = ({
     >
       <Button
         block
-        onClick={() => {}}
         data-testid="cancel-button"
         variant={ButtonVariant.Secondary}
         {...cancelButtonProps}
@@ -45,7 +44,6 @@ const Footer: React.FC<FooterProps> = ({
       <Button
         size={ButtonSize.Lg}
         block
-        onClick={() => {}}
         data-testid="confirm-button"
         {...confirmButtonProps}
       >
