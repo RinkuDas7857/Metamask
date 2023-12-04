@@ -1,13 +1,15 @@
-const { strict: assert } = require('assert');
-const {
+import { strict as assert } from 'assert';
+import { Suite } from 'mocha';
+import FixtureBuilder from '../fixture-builder';
+import {
   withFixtures,
   defaultGanacheOptions,
   unlockWallet,
   openDapp,
-} = require('../helpers');
-const FixtureBuilder = require('../fixture-builder');
+} from '../helpers';
+import { Driver } from '../webdriver/driver';
 
-describe('Revoke Dapp Permissions', function () {
+describe('Revoke Dapp Permissions', function (this: Suite) {
   it('should revoke dapp permissions ', async function () {
     await withFixtures(
       {
@@ -16,9 +18,9 @@ describe('Revoke Dapp Permissions', function () {
           .withPermissionControllerConnectedToTestDapp()
           .build(),
         defaultGanacheOptions,
-        title: this.test.fullTitle(),
+        title: this.test?.fullTitle(),
       },
-      async ({ driver }) => {
+      async ({ driver }: { driver: Driver }) => {
         await driver.navigate();
         await unlockWallet(driver);
 
@@ -49,9 +51,9 @@ describe('Revoke Dapp Permissions', function () {
         // Response of method call
         assert.deepEqual(result, null);
 
-        // Reload Dapp
-        await driver.executeScript(`window.location.reload()`);
-
+        // TODO: Fix having to reload dapp as it is not the proper behavior in production, issue with test setup.
+        // await driver.executeScript(`window.location.reload()`);
+        assert.equal(true, false)
         accountsDiv = await driver.findElement('#accounts');
 
         assert.equal(await accountsDiv.getText(), '');
