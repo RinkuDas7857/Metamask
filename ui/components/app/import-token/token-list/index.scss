@@ -1,15 +1,29 @@
 .token-list {
+  &__empty-list {
+    height: 179px;
+
+    @include screen-sm-max {
+      max-height: 260px;
+    }
+  }
+
   &__tokens-container {
     display: flex;
     flex-direction: column;
     overflow: auto;
-    max-height: 400px;
+    overflow-y: scroll;
+    scrollbar-width: none; /* for Firefox */
+    max-height: 179px;
+
+    @include screen-sm-max {
+      max-height: 185px;
+    }
   }
 
   &__token_component {
     display: flex;
     flex-flow: row nowrap;
-    padding: 20px;
+    padding: 16px;
     align-items: center;
     cursor: pointer;
 
@@ -23,3 +37,5 @@
     }
   }
 }
+
+

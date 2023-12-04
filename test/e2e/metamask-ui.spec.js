@@ -396,6 +396,9 @@ describe('MetaMask @no-mmi', function () {
       await driver.switchToWindow(extension);
       await driver.delay(largeDelayMs);
 
+      await driver.switchToWindow(extension);
+      await driver.clickElement({ tag: 'button', text: 'Activity' });
+
       await driver.findElements('.transaction-list__pending-transactions');
       await driver.waitForSelector({
         css: '[data-testid="transaction-list-item-primary-currency"]',

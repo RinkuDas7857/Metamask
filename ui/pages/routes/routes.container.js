@@ -26,7 +26,7 @@ import {
   toggleNetworkMenu,
   hideImportTokensModal,
   hideImportTokensExitModal,
-  ///: BEGIN:ONLY_INCLUDE_IN(keyring-snaps)
+  ///: BEGIN:ONLY_INCLUDE_IF(keyring-snaps)
   hideKeyringRemovalResultModal,
   ///: END:ONLY_INCLUDE_IF
 } from '../../store/actions';

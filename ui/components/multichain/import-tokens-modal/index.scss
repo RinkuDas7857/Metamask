@@ -1,5 +1,31 @@
+.import-tokens-content-scrollable {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.token-list-confirmation {
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+  overflow-y: scroll;
+  overflow: auto;
+  height: 296.5px;
+
+  @include screen-sm-max {
+    height: 298.5px;
+  }
+}
+
+.import-tokens-tabs {
+  padding-left: 16px;
+  padding-right: 16px;
+  justify-content: center;
+}
+
+
 .import-tokens-modal {
   $self: &;
+
 
   .tabs {
     ul {
@@ -11,17 +37,66 @@
     }
   }
 
+  &__modal-content{
+    padding-top: 200px;
+
+    @include screen-sm-max {
+      padding-top: 24px;
+    }
+  }
+
+  &__modal-dialog-content{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-top: 16px !important;
+  }
+
+
   &__autodetect {
     vertical-align: unset;
   }
 
   &__search-list {
+    -ms-overflow-style: none; /* for Internet Explorer, Edge */
+    scrollbar-width: none; /* for Firefox */
+    overflow-y: scroll;
     max-width: 100%;
     overflow: auto;
-    max-height: 200px;
+    max-height: 400px;
   }
 
+  &__active-tab {
+    color: var(--color-primary-default);
+  }
+
+  &__button-tab {
+    font-weight: 500;
+  }
+
+  &__button-search {
+    outline-color: var(--color-primary-default);
+  }
+
+
   &__custom-token-form {
+    &__container {
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      overflow-y: scroll;
+      -ms-overflow-style: none; /* for Internet Explorer, Edge */
+      scrollbar-width: none; /* for Firefox */
+      max-height: 224px;
+
+      @include screen-sm-max {
+        max-height: 205px;
+      }
+    }
+
+    &__text-outline {
+      outline-color: var(--color-primary-default);
+    }
+
     input[type='number']::-webkit-inner-spin-button {
       -webkit-appearance: none;
       display: none;
@@ -65,3 +140,9 @@
     font-size: inherit;
   }
 }
+
+
+
+
+
+

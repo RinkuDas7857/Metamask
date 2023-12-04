@@ -66,7 +66,7 @@ export default class TokenSearch extends Component {
     return (
       <TextFieldSearch
         className={searchClassName}
-        placeholder={this.context.t('search')}
+        placeholder={this.context.t('searchTokens')}
         value={searchQuery}
         onChange={(e) => this.handleSearch(e.target.value)}
         error={error}

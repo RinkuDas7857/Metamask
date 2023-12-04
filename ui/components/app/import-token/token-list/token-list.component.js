@@ -45,89 +45,94 @@ export default class TokenList extends Component {
       testNetworkBackgroundColor,
     } = this.props;
 
-    return results.length === 0 ? (
-      <TokenListPlaceholder />
-    ) : (
+    return (
       <Box className="token-list">
-        <Box className="token-list__tokens-container">
-          {Array(12)
-            .fill(undefined)
-            .map((_, i) => {
-              const { symbol, name, address } = results[i] || {};
-              const tokenAlreadyAdded = checkExistingAddresses(address, tokens);
-              let tokenAlreadySelected;
-              if (tokenAlreadyAdded) {
-                tokenAlreadySelected = results[i];
-              }
-              const onClick = () =>
-                !tokenAlreadyAdded && onToggleToken(results[i]);
-              return (
-                Boolean(results[i]?.iconUrl || symbol || name) && (
-                  <Box
-                    key={address}
-                    display={Display.Flex}
-                    className={classnames('token-list__token_component', {
-                      'token-list__token_component--selected':
-                        selectedTokens[address],
-                      'token-list__token_component--disabled':
-                        tokenAlreadyAdded,
-                    })}
-                    onClick={onClick}
-                  >
-                    <Box display={Display.Flex} alignItems={AlignItems.center}>
-                      <Checkbox
-                        isChecked={
-                          selectedTokens[address] ||
-                          tokenAlreadySelected ||
-                          false
-                        }
-                        marginRight={3}
-                        onClick={onClick}
-                      />
-
-                      <Box>
-                        <BadgeWrapper
-                          badge={
-                            <AvatarNetwork
-                              size={AvatarNetworkSize.Xs}
-                              name={currentNetwork?.nickname}
-                              src={currentNetwork?.rpcPrefs?.imageUrl}
-                              backgroundColor={testNetworkBackgroundColor}
-                            />
-                          }
-                          marginRight={3}
-                          marginTop={1}
-                        >
-                          <AvatarToken
-                            name={symbol}
-                            src={results[i]?.iconUrl}
-                            showHalo
-                          />
-                        </BadgeWrapper>
-                      </Box>
+        {results.length === 0 ? (
+          <Box
+            paddingLeft={4}
+            paddinfRight={4}
+            className="token-list__empty-list"
+          >
+            <TokenListPlaceholder />
+          </Box>
+        ) : (
+          <Box className="token-list__tokens-container">
+            {Array(12)
+              .fill(undefined)
+              .map((_, i) => {
+                const { symbol, name, address } = results[i] || {};
+                const tokenAlreadyAdded = checkExistingAddresses(
+                  address,
+                  tokens,
+                );
+                const onClick = () =>
+                  !tokenAlreadyAdded && onToggleToken(results[i]);
+                return (
+                  Boolean(results[i]?.iconUrl || symbol || name) && (
+                    <Box
+                      key={address}
+                      display={Display.Flex}
+                      className={classnames('token-list__token_component', {
+                        'token-list__token_component--selected':
+                          selectedTokens[address],
+                        'token-list__token_component--disabled':
+                          tokenAlreadyAdded,
+                      })}
+                      onClick={onClick}
+                    >
                       <Box
-                        marginInlineStart={2}
-                        className="import-tokens-modal__confirm-token-list-item-wrapper__text"
+                        display={Display.Flex}
+                        alignItems={AlignItems.center}
                       >
-                        <Text
-                          fontWeight={FontWeight.Medium}
-                          variant={TextVariant.bodyMd}
-                        >
-                          {name}
-                        </Text>
-                        <Text
-                          variant={TextVariant.bodySm}
-                          color={TextColor.textAlternative}
-                        >
-                          {symbol}
-                        </Text>
+                        <Checkbox
+                          isChecked={
+                            selectedTokens[address] || tokenAlreadyAdded
+                          }
+                          marginRight={2}
+                          onClick={onClick}
+                        />
+
+                        <Box>
+                          <BadgeWrapper
+                            badge={
+                              <AvatarNetwork
+                                size={AvatarNetworkSize.Xs}
+                                name={currentNetwork?.nickname}
+                                src={currentNetwork?.rpcPrefs?.imageUrl}
+                                backgroundColor={testNetworkBackgroundColor}
+                              />
+                            }
+                            marginRight={4}
+                            marginTop={1}
+                          >
+                            <AvatarToken
+                              name={symbol}
+                              src={results[i]?.iconUrl}
+                              showHalo
+                            />
+                          </BadgeWrapper>
+                        </Box>
+                        <Box>
+                          <Text
+                            fontWeight={FontWeight.Medium}
+                            variant={TextVariant.bodyMd}
+                          >
+                            {name}
+                          </Text>
+                          <Text
+                            variant={TextVariant.bodySm}
+                            color={TextColor.textAlternative}
+                          >
+                            {symbol}
+                          </Text>
+                        </Box>
                       </Box>
                     </Box>
-                  </Box>
-                )
-              );
-            })}
-        </Box>
+                  )
+                );
+              })}
+          </Box>
+        )}
       </Box>
     );
   }

@@ -29,12 +29,7 @@ export const ImportTokensExitModal = ({ onClose }) => {
   const history = useHistory();
 
   return (
-    <Modal
-      isOpen
-      onClose={() => {
-        onClose();
-      }}
-    >
+    <Modal isOpen>
       <ModalOverlay />
       <ModalContent className="top-class">
         <Box>
@@ -68,6 +63,7 @@ export const ImportTokensExitModal = ({ onClose }) => {
               onClick={() => {
                 dispatch(actions.clearPendingTokens());
                 onClose();
+                dispatch(actions.hideImportTokensModal());
                 history.push(DEFAULT_ROUTE);
               }}
               block

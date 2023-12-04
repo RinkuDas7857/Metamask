@@ -43,7 +43,7 @@ describe('ImportTokensModal', () => {
         getByText(`Add the tokens you've acquired using MetaMask`),
       ).toBeInTheDocument();
       expect(getByText('Next')).toBeDisabled();
-      expect(getByPlaceholderText('Search')).toBeInTheDocument();
+      expect(getByPlaceholderText('Search tokens')).toBeInTheDocument();
     });
 
     it('shows the token detection notice when setting is off', () => {
@@ -152,6 +152,7 @@ describe('ImportTokensModal', () => {
           decimals: Number(tokenPrecision),
           standard: TokenStandard.ERC20,
           symbol: tokenSymbol,
+          name: '',
         },
         selectedTokens: {},
         tokenAddressList: [],

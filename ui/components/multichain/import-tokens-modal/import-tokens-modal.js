@@ -24,6 +24,8 @@ import {
   getSelectedNetworkClientId,
   getTokenDetectionSupportNetworkByChainId,
   getTokenList,
+  getCurrentNetwork,
+  getTestNetworkBackgroundColor,
 } from '../../../selectors';
 import {
   addImportedTokens,
@@ -31,6 +33,10 @@ import {
   getTokenStandardAndDetails,
   setPendingTokens,
   showImportNftsModal,
+  showImportTokensExitModal,
+  setNewTokensImported,
+  setNewTokensImportedError,
+  hideImportTokensModal,
 } from '../../../store/actions';
 import {
   BannerAlert,
@@ -43,19 +49,25 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  ButtonSecondary,
 } from '../../component-library';
 import TokenSearch from '../../app/import-token/token-search';
 import TokenList from '../../app/import-token/token-list';
 
 import {
+  Display,
   FontWeight,
   Severity,
   Size,
   TextAlign,
   TextColor,
+  TextVariant,
 } from '../../../helpers/constants/design-system';
 
-import { ASSET_ROUTE, SECURITY_ROUTE } from '../../../helpers/constants/routes';
+import {
+  SECURITY_ROUTE,
+  DEFAULT_ROUTE,
+} from '../../../helpers/constants/routes';
 import ZENDESK_URLS from '../../../helpers/constants/zendesk-url';
 import { isValidHexAddress } from '../../../../shared/modules/hexstring-utils';
 import { addHexPrefix } from '../../../../app/scripts/lib/util';
@@ -76,6 +88,7 @@ import {
   MetaMetricsEventName,
   MetaMetricsTokenEventSource,
 } from '../../../../shared/constants/metametrics';
+import { getMostRecentOverviewPage } from '../../../ducks/history/history';
 import { ImportTokensModalConfirm } from './import-tokens-modal-confirm';
 
 export const ImportTokensModal = ({ onClose }) => {
@@ -104,6 +117,7 @@ export const ImportTokensModal = ({ onClose }) => {
     ({ metamask }) => metamask.useTokenDetection,
   );
   const networkName = useSelector(getTokenDetectionSupportNetworkByChainId);
+  const mostRecentOverviewPage = useSelector(getMostRecentOverviewPage);
 
   // Custom token stuff
   const tokenDetectionInactiveOnNonMainnetSupportedNetwork = useSelector(
@@ -125,11 +139,14 @@ export const ImportTokensModal = ({ onClose }) => {
   const [decimalAutoFilled, setDecimalAutoFilled] = useState(false);
   const [mainnetTokenWarning, setMainnetTokenWarning] = useState(null);
   const [customSymbol, setCustomSymbol] = useState('');
+  const [customName, setCustomName] = useState('');
   const [customSymbolError, setCustomSymbolError] = useState(null);
   const [customDecimals, setCustomDecimals] = useState(0);
   const [customDecimalsError, setCustomDecimalsError] = useState(null);
   const [tokenStandard, setTokenStandard] = useState(TokenStandard.none);
   const [forceEditSymbol, setForceEditSymbol] = useState(false);
+  const currentNetwork = useSelector(getCurrentNetwork);
+  const testNetworkBackgroundColor = useSelector(getTestNetworkBackgroundColor);
 
   const chainId = useSelector(getCurrentChainId);
   const blockExplorerTokenLink = getTokenTrackerLink(
@@ -156,33 +173,42 @@ export const ImportTokensModal = ({ onClose }) => {
   const networkClientId = useSelector(getSelectedNetworkClientId);
 
   const handleAddTokens = useCallback(async () => {
-    const addedTokenValues = Object.values(pendingTokens);
-    await dispatch(addImportedTokens(addedTokenValues, networkClientId));
+    try {
+      const addedTokenValues = Object.values(pendingTokens);
+      await dispatch(addImportedTokens(addedTokenValues, networkClientId));
 
-    const firstTokenAddress = addedTokenValues?.[0].address?.toLowerCase();
-
-    addedTokenValues.forEach((pendingToken) => {
-      trackEvent({
-        event: MetaMetricsEventName.TokenAdded,
-        category: MetaMetricsEventCategory.Wallet,
-        sensitiveProperties: {
-          token_symbol: pendingToken.symbol,
-          token_contract_address: pendingToken.address,
-          token_decimal_precision: pendingToken.decimals,
-          unlisted: pendingToken.unlisted,
-          source_connection_method: pendingToken.isCustom
-            ? MetaMetricsTokenEventSource.Custom
-            : MetaMetricsTokenEventSource.List,
-          token_standard: TokenStandard.ERC20,
-          asset_type: AssetType.token,
-        },
+      addedTokenValues.forEach((pendingToken) => {
+        trackEvent({
+          event: MetaMetricsEventName.TokenAdded,
+          category: MetaMetricsEventCategory.Wallet,
+          sensitiveProperties: {
+            token_symbol: pendingToken.symbol,
+            token_contract_address: pendingToken.address,
+            token_decimal_precision: pendingToken.decimals,
+            unlisted: pendingToken.unlisted,
+            source_connection_method: pendingToken.isCustom
+              ? MetaMetricsTokenEventSource.Custom
+              : MetaMetricsTokenEventSource.List,
+            token_standard: TokenStandard.ERC20,
+            asset_type: AssetType.token,
+          },
+        });
       });
-    });
+      const tokenSymbols = [];
+      for (const key in pendingTokens) {
+        if (Object.prototype.hasOwnProperty.call(pendingTokens, key)) {
+          tokenSymbols.push(pendingTokens[key].symbol);
+        }
+      }
 
-    dispatch(clearPendingTokens());
-
-    if (firstTokenAddress) {
-      history.push(`${ASSET_ROUTE}/${firstTokenAddress}`);
+      dispatch(setNewTokensImported(tokenSymbols.join(', ')));
+      dispatch(clearPendingTokens());
+      dispatch(hideImportTokensModal());
+      history.push(DEFAULT_ROUTE);
+    } catch (err) {
+      dispatch(setNewTokensImportedError('error'));
+      dispatch(clearPendingTokens());
+      history.push(DEFAULT_ROUTE);
     }
   }, [dispatch, history, pendingTokens, trackEvent]);
 
@@ -249,16 +275,19 @@ export const ImportTokensModal = ({ onClose }) => {
   };
 
   const attemptToAutoFillTokenParams = async (address) => {
-    const { symbol = '', decimals } = await infoGetter.current(
-      address,
-      tokenList,
-    );
+    const {
+      symbol = '',
+      decimals,
+      name,
+    } = await infoGetter.current(address, tokenList);
 
     setSymbolAutoFilled(Boolean(symbol));
     setDecimalAutoFilled(Boolean(decimals));
 
     handleCustomSymbolChange(symbol || '');
     handleCustomDecimalsChange(decimals);
+    // Set custom token name
+    setCustomName(name);
   };
 
   const handleToggleToken = (token) => {
@@ -306,6 +335,7 @@ export const ImportTokensModal = ({ onClose }) => {
           symbol: customSymbol,
           decimals: customDecimals,
           standard: tokenStandard,
+          name: customName,
         }
       : null;
 
@@ -409,44 +439,65 @@ export const ImportTokensModal = ({ onClose }) => {
   return (
     <Modal
       isOpen
+      isClosedOnOutsideClick={false}
       onClose={() => {
-        dispatch(clearPendingTokens());
-        onClose();
+        if (
+          Object.keys(selectedTokens).length === 0 ||
+          Object.keys(pendingTokens).length === 0
+        ) {
+          dispatch(clearPendingTokens());
+          onClose();
+        } else {
+          dispatch(showImportTokensExitModal());
+        }
       }}
-      className="import-tokens-modal"
+      className="import-tokens-modal import-tokens-content-scrollable"
     >
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent
+        className="import-tokens-modal__modal-content"
+        modalDialogProps={{
+          className: 'import-tokens-modal__modal-dialog-content',
+        }}
+      >
         <ModalHeader
           onBack={isConfirming ? () => setMode('') : null}
+          paddingBottom={4}
+          paddingRight={4}
+          paddingLeft={4}
           onClose={() => {
-            dispatch(clearPendingTokens());
-            onClose();
+            if (Object.keys(selectedTokens).length === 0) {
+              dispatch(clearPendingTokens());
+              onClose();
+            } else {
+              dispatch(showImportTokensExitModal());
+            }
           }}
         >
           {t('importTokensCamelCase')}
         </ModalHeader>
-        <Box marginTop={6}>
-          {isConfirming ? (
-            <ImportTokensModalConfirm
-              onBackClick={() => {
-                dispatch(clearPendingTokens());
-                setMode('');
-              }}
-              onImportClick={async () => {
-                await handleAddTokens();
-                onClose();
-              }}
-            />
-          ) : (
-            <>
-              <Tabs t={t}>
-                {showSearchTab ? (
-                  <Tab tabKey="search" name={t('search')}>
-                    <Box paddingTop={4} paddingBottom={4}>
-                      {useTokenDetection ? null : (
-                        <BannerAlert severity={Severity.Info} marginBottom={4}>
-                          <Text>
+        <Box>
+          <Tabs t={t} tabsClassName="import-tokens-tabs">
+            {showSearchTab ? (
+              <Tab
+                activeClassName="import-tokens-modal__active-tab"
+                buttonClassName="import-tokens-modal__button-tab"
+                tabKey="search"
+                name={t('search')}
+              >
+                {isConfirming ? (
+                  <ImportTokensModalConfirm />
+                ) : (
+                  <Box paddingTop={4}>
+                    {useTokenDetection ? null : (
+                      <Box paddingLeft={4} paddingRight={4}>
+                        <BannerAlert
+                          severity={Severity.Info}
+                          marginBottom={4}
+                          paddingLeft={4}
+                          paddingRight={4}
+                        >
+                          <Text variant={TextVariant.bodyMd} fontSize="16">
                             {t('enhancedTokenDetectionAlertMessage', [
                               networkName,
                               <ButtonLink
@@ -456,7 +507,7 @@ export const ImportTokensModal = ({ onClose }) => {
                                   history.push(
                                     `${SECURITY_ROUTE}#auto-detect-tokens`,
                                   );
-                                  onClose();
+                                  history.push(mostRecentOverviewPage);
                                 }}
                               >
                                 {t('enableFromSettings')}
@@ -464,34 +515,52 @@ export const ImportTokensModal = ({ onClose }) => {
                             ])}
                           </Text>
                         </BannerAlert>
-                      )}
+                      </Box>
+                    )}
+                    <Box paddingLeft={4} paddingRight={4}>
                       <TokenSearch
+                        searchClassName="import-tokens-modal__button-search"
                         onSearch={({ results = [] }) =>
                           setSearchResults(results)
                         }
                         error={tokenSelectorError}
                         tokenList={tokenList}
                       />
-                      <Box
-                        marginTop={4}
-                        className="import-tokens-modal__search-list"
-                      >
-                        <TokenList
-                          results={searchResults}
-                          selectedTokens={selectedTokens}
-                          onToggleToken={(token) => handleToggleToken(token)}
-                        />
-                      </Box>
                     </Box>
-                  </Tab>
-                ) : null}
-                <Tab tabKey="customToken" name={t('customToken')}>
-                  <Box
-                    paddingTop={4}
-                    paddingBottom={4}
-                    className="import-tokens-modal__custom-token-form"
-                  >
-                    {tokenDetectionInactiveOnNonMainnetSupportedNetwork ? (
+
+                    <Box
+                      marginTop={4}
+                      className="import-tokens-content-scrollable"
+                    >
+                      <TokenList
+                        currentNetwork={currentNetwork}
+                        testNetworkBackgroundColor={testNetworkBackgroundColor}
+                        results={searchResults}
+                        selectedTokens={selectedTokens}
+                        onToggleToken={(token) => handleToggleToken(token)}
+                      />
+                    </Box>
+                  </Box>
+                )}
+              </Tab>
+            ) : null}
+            <Tab
+              activeClassName="import-tokens-modal__active-tab"
+              className="import-tokens-modal__tab"
+              buttonClassName="import-tokens-modal__button-tab"
+              tabKey="customToken"
+              name={t('customToken')}
+            >
+              {isConfirming ? (
+                <ImportTokensModalConfirm />
+              ) : (
+                <Box
+                  paddingTop={4}
+                  paddingBottom={4}
+                  className="import-tokens-modal__custom-token-form"
+                >
+                  {tokenDetectionInactiveOnNonMainnetSupportedNetwork ? (
+                    <Box paddingLeft={4} paddingRight={4}>
                       <BannerAlert severity={Severity.Warning}>
                         {t(
                           'customTokenWarningInTokenDetectionNetworkWithTDOFF',
@@ -511,7 +580,7 @@ export const ImportTokensModal = ({ onClose }) => {
                                 history.push(
                                   `${SECURITY_ROUTE}#auto-detect-tokens`,
                                 );
-                                onClose();
+                                history.push(mostRecentOverviewPage);
                               }}
                             >
                               {t('inYourSettings')}
@@ -519,7 +588,9 @@ export const ImportTokensModal = ({ onClose }) => {
                           ],
                         )}
                       </BannerAlert>
-                    ) : (
+                    </Box>
+                  ) : (
+                    <Box paddingLeft={4} paddingRight={4}>
                       <BannerAlert
                         severity={
                           isDynamicTokenListAvailable
@@ -543,8 +614,13 @@ export const ImportTokensModal = ({ onClose }) => {
                           ],
                         )}
                       </BannerAlert>
-                    )}
+                    </Box>
+                  )}
+                  <Box className="import-tokens-modal__custom-token-form__container">
                     <FormTextField
+                      paddingLeft={4}
+                      paddingRight={4}
+                      paddingTop={6}
                       label={t('tokenContractAddress')}
                       value={customAddress}
                       onChange={(e) =>
@@ -561,12 +637,18 @@ export const ImportTokensModal = ({ onClose }) => {
                         nftAddressError
                       }
                       autoFocus
-                      marginTop={6}
+                      textFieldProps={{
+                        className:
+                          'import-tokens-modal__custom-token-form__text-outline',
+                      }}
                       inputProps={{
                         'data-testid': 'import-tokens-modal-custom-address',
                       }}
                     />
                     <FormTextField
+                      paddingLeft={4}
+                      paddingRight={4}
+                      paddingTop={4}
                       label={
                         <>
                           {t('tokenSymbol')}
@@ -588,12 +670,18 @@ export const ImportTokensModal = ({ onClose }) => {
                       helpText={customSymbolError}
                       error={customSymbolError}
                       disabled={symbolAutoFilled && !forceEditSymbol}
-                      marginTop={6}
+                      textFieldProps={{
+                        className:
+                          'import-tokens-modal__custom-token-form__text-outline',
+                      }}
                       inputProps={{
                         'data-testid': 'import-tokens-modal-custom-symbol',
                       }}
                     />
                     <FormTextField
+                      paddingLeft={4}
+                      paddingRight={4}
+                      paddingTop={4}
                       label={t('decimal')}
                       type="number"
                       value={customDecimals}
@@ -605,44 +693,81 @@ export const ImportTokensModal = ({ onClose }) => {
                       disabled={decimalAutoFilled}
                       min={MIN_DECIMAL_VALUE}
                       max={MAX_DECIMAL_VALUE}
-                      marginTop={6}
+                      textFieldProps={{
+                        className:
+                          'import-tokens-modal__custom-token-form__text-outline',
+                      }}
                       inputProps={{
                         'data-testid': 'import-tokens-modal-custom-decimals',
                       }}
                     />
-                    {customDecimals === '' && (
-                      <BannerAlert severity={Severity.Warning}>
-                        <Text fontWeight={FontWeight.Bold}>
-                          {t('tokenDecimalFetchFailed')}
-                        </Text>
-                        {t('verifyThisTokenDecimalOn', [
-                          <ButtonLink
-                            key="import-token-verify-token-decimal"
-                            rel="noopener noreferrer"
-                            target="_blank"
-                            href={blockExplorerTokenLink}
-                          >
-                            {blockExplorerLabel}
-                          </ButtonLink>,
-                        ])}
-                      </BannerAlert>
-                    )}
                   </Box>
-                </Tab>
-              </Tabs>
-              <Box paddingTop={6} paddingBottom={6}>
-                <ButtonPrimary
-                  onClick={() => handleNext()}
-                  size={Size.LG}
-                  disabled={Boolean(hasError()) || !hasSelected()}
-                  block
-                >
-                  {t('next')}
-                </ButtonPrimary>
-              </Box>
-            </>
-          )}
+
+                  {customDecimals === '' && (
+                    <BannerAlert severity={Severity.Warning}>
+                      <Text fontWeight={FontWeight.Bold}>
+                        {t('tokenDecimalFetchFailed')}
+                      </Text>
+                      {t('verifyThisTokenDecimalOn', [
+                        <ButtonLink
+                          key="import-token-verify-token-decimal"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                          href={blockExplorerTokenLink}
+                        >
+                          {blockExplorerLabel}
+                        </ButtonLink>,
+                      ])}
+                    </BannerAlert>
+                  )}
+                </Box>
+              )}
+            </Tab>
+          </Tabs>
         </Box>
+        {isConfirming ? (
+          <Box
+            paddingTop={5}
+            paddingLeft={4}
+            paddingRight={4}
+            display={Display.Flex}
+          >
+            <ButtonSecondary
+              size={Size.LG}
+              onClick={() => {
+                dispatch(clearPendingTokens());
+                setMode('');
+              }}
+              block
+              marginRight={5}
+            >
+              {t('back')}
+            </ButtonSecondary>
+            <ButtonPrimary
+              size={Size.LG}
+              onClick={async () => {
+                await handleAddTokens();
+                history.push(DEFAULT_ROUTE);
+              }}
+              block
+              data-testid="import-tokens-modal-import-button"
+            >
+              {t('import')}
+            </ButtonPrimary>
+          </Box>
+        ) : (
+          <Box paddingTop={6} paddingLeft={4} paddingRight={4}>
+            <ButtonPrimary
+              onClick={() => handleNext()}
+              size={Size.LG}
+              disabled={Boolean(hasError()) || !hasSelected()}
+              block
+              data-testid="import-tokens-button-next"
+            >
+              {t('next')}
+            </ButtonPrimary>
+          </Box>
+        )}
       </ModalContent>
     </Modal>
   );
