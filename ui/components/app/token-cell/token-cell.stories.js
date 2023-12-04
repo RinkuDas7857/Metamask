@@ -25,7 +25,6 @@ export default {
     symbol: 'TEST',
     string: '5.000',
     currentCurrency: 'usd',
-    isOriginalTokenSymbol: true,
   },
 };
 

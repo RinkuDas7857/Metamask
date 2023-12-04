@@ -2715,7 +2715,6 @@ export default class MetamaskController extends EventEmitter {
 
       // AssetsContractController
       getTokenStandardAndDetails: this.getTokenStandardAndDetails.bind(this),
-      getTokenSymbol: this.getTokenSymbol.bind(this),
 
       // NftController
       addNft: nftController.addNft.bind(nftController),
@@ -3220,16 +3219,6 @@ export default class MetamaskController extends EventEmitter {
       decimals: details?.decimals?.toString(10),
       balance: details?.balance?.toString(10),
     };
-  }
-
-  async getTokenSymbol(address) {
-    try {
-      const details =
-        await this.assetsContractController.getTokenStandardAndDetails(address);
-      return details?.symbol;
-    } catch (e) {
-      return null;
-    }
   }
 
   //=============================================================================

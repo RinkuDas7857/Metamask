@@ -1,11 +1,9 @@
 import React from 'react';
-import { screen, act, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { renderWithProvider } from '../../../../test/jest';
 import configureStore from '../../../store/store';
 import mockState from '../../../../test/data/mock-state.json';
 import { CHAIN_IDS } from '../../../../shared/constants/network';
-import { useIsOriginalNativeTokenSymbol } from '../../../hooks/useIsOriginalNativeTokenSymbol';
-import { getTokenSymbol } from '../../../store/actions';
 import AssetList from './asset-list';
 
 // Specific to just the ETH FIAT conversion
@@ -51,18 +49,6 @@ jest.mock('../../../hooks/useTokenTracker', () => {
   };
 });
 
-jest.mock('../../../hooks/useIsOriginalNativeTokenSymbol', () => {
-  return {
-    useIsOriginalNativeTokenSymbol: jest.fn(),
-  };
-});
-
-jest.mock('../../../store/actions', () => {
-  return {
-    getTokenSymbol: jest.fn(),
-  };
-});
-
 const render = (
   selectedAddress = mockState.metamask.selectedAddress,
   balance = ETH_BALANCE,
@@ -99,42 +85,17 @@ const render = (
 };
 
 describe('AssetList', () => {
-  useIsOriginalNativeTokenSymbol.mockReturnValue(true);
-
-  getTokenSymbol.mockImplementation(async (address) => {
-    if (address === USDC_CONTRACT) {
-      return 'USDC';
-    }
-    if (address === LINK_CONTRACT) {
-      return 'LINK';
-    }
-    if (address === WBTC_CONTRACT) {
-      return 'WBTC';
-    }
-    return null;
-  });
-
-  it('renders AssetList component and shows Refresh List text', async () => {
-    await act(async () => {
-      render();
-    });
-
-    await waitFor(() => {
-      expect(screen.getByText('Refresh list')).toBeInTheDocument();
-    });
+  it('renders AssetList component and shows Refresh List text', () => {
+    render();
+    expect(screen.getByText('Refresh list')).toBeInTheDocument();
   });
 
   describe('token fiat value calculations', () => {
-    it('calculates the correct fiat account total', async () => {
+    it('calculates the correct fiat account total', () => {
       process.env.MULTICHAIN = 1;
-      await act(async () => {
-        render();
-      });
-
-      await waitFor(() => {
-        expect(screen.getByText('$63,356.88 USD')).toBeInTheDocument();
-        jest.resetModules();
-      });
+      render();
+      expect(screen.getByText('$63,356.88 USD')).toBeInTheDocument();
+      jest.resetModules();
     });
   });
 });

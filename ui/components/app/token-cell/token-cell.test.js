@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 import { renderWithProvider } from '../../../../test/lib/render-helpers';
 import { useTokenFiatAmount } from '../../../hooks/useTokenFiatAmount';
 
-import { useIsOriginalTokenSymbol } from '../../../hooks/useIsOriginalTokenSymbol';
 import TokenCell from '.';
 
 jest.mock('react-redux', () => {
@@ -21,12 +20,6 @@ jest.mock('react-redux', () => {
 jest.mock('../../../hooks/useTokenFiatAmount', () => {
   return {
     useTokenFiatAmount: jest.fn(),
-  };
-});
-
-jest.mock('../../../hooks/useIsOriginalTokenSymbol', () => {
-  return {
-    useIsOriginalTokenSymbol: jest.fn(),
   };
 });
 describe('Token Cell', () => {
@@ -50,8 +43,6 @@ describe('Token Cell', () => {
       },
     },
   };
-
-  useIsOriginalTokenSymbol.mockReturnValue(true);
 
   // two tokens with the same symbol but different addresses
   const MOCK_GET_TOKEN_LIST = {

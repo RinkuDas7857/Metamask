@@ -51,7 +51,6 @@ import { AssetType } from '../../../../shared/constants/transaction';
 import { Icon, IconName } from '../../component-library';
 import { IconColor } from '../../../helpers/constants/design-system';
 
-import { useIsOriginalTokenSymbol } from '../../../hooks/useIsOriginalTokenSymbol';
 import WalletOverview from './wallet-overview';
 
 const TokenOverview = ({ className, token }) => {
@@ -69,11 +68,6 @@ const TokenOverview = ({ className, token }) => {
   const formattedFiatBalance = useTokenFiatAmount(
     token.address,
     balanceToRender,
-    token.symbol,
-  );
-
-  const isOriginalTokenSymbol = useIsOriginalTokenSymbol(
-    token.address,
     token.symbol,
   );
   const chainId = useSelector(getCurrentChainId);
@@ -129,7 +123,7 @@ const TokenOverview = ({ className, token }) => {
               suffix={token.symbol}
             />
           </div>
-          {formattedFiatBalance && isOriginalTokenSymbol ? (
+          {formattedFiatBalance ? (
             <CurrencyDisplay
               className="token-overview__secondary-balance"
               displayValue={formattedFiatBalance}
