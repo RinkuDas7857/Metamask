@@ -1,9 +1,10 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import type { StoryObj } from '@storybook/react';
 import { Footer } from '.';
 import configureStore from '../../../../store/store';
 import mockState from '../../../../../test/data/mock-state.json';
-import { Provider } from 'react-redux';
+
 
 const store = configureStore({
   metamask: {
@@ -41,25 +42,18 @@ const Story = {
 };
 
 export default Story;
-type Story = StoryObj<typeof Footer>;
 
 export const DefaultStory = () => <Footer />;
 
-DefaultStory.name = 'Default';
+DefaultStory.storyName = 'Default';
 
-export const CancelButtonButtonProps: Story = {
-  args: {
-    cancelButtonProps: { 'data-testid': 'cancel-button' },
-  },
-};
-
-export const ConfirmButtonDisabledButtonProps: Story = {
+export const ConfirmButtonDisabledButtonProps = {
   args: {
     confirmButtonProps: { disabled: true, 'data-testid': 'confirm-button' },
   },
 };
 
-export const ConfirmButtonDangerButtonProps: Story = {
+export const ConfirmButtonDangerButtonProps = {
   args: {
     confirmButtonProps: { danger: true, 'data-testid': 'confirm-button' },
   },
