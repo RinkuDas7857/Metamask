@@ -4691,8 +4691,4 @@ export async function setSnapsAddSnapAccountModalDismissed() {
     true,
   ]);
 }
-
-export async function updateSnapRegistry() {
-  await submitRequestToBackground('updateSnapRegistry', []);
-}
 ///: END:ONLY_INCLUDE_IF
