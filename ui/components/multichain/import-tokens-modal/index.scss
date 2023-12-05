@@ -37,7 +37,7 @@
     }
   }
 
-  &__modal-content{
+  &__modal-content {
     padding-top: 200px;
 
     @include screen-sm-max {
@@ -45,7 +45,7 @@
     }
   }
 
-  &__modal-dialog-content{
+  &__modal-dialog-content {
     padding-left: 0 !important;
     padding-right: 0 !important;
     padding-top: 16px !important;
