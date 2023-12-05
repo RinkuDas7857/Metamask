@@ -89,7 +89,7 @@ const SnapAuthorshipHeader = ({
         <AvatarIcon
           iconName={IconName.Info}
           onClick={openModal}
-          color={IconColor.iconAlternative}
+          color={IconColor.iconMuted}
           backgroundColor={BackgroundColor.backgroundAlternative}
         />
       </Box>
