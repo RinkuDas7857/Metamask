@@ -803,4 +803,23 @@ describe('Selectors', () => {
   it('#getAnySnapUpdateAvailable', () => {
     expect(selectors.getAnySnapUpdateAvailable(mockState)).toStrictEqual(true);
   });
+
+  it('#getUpdatedAndSortedAccounts', () => {
+    const pinnedAccountState = {
+      ...mockState,
+      metamask: {
+        ...mockState.metamask,
+        pinnedAccountList: ['0x2...', '0x0...', '0x1...'],
+      },
+    };
+    const expectedResult = [
+      '0x2...',
+      '0x0...',
+      '0x1...',
+      mockState.metamask.accounts,
+    ];
+    expect(
+      selectors.getUpdatedAndSortedAccounts(pinnedAccountState),
+    ).toStrictEqual(expectedResult);
+  });
 });
