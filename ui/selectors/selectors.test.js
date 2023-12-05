@@ -809,13 +809,25 @@ describe('Selectors', () => {
       ...mockState,
       metamask: {
         ...mockState.metamask,
-        pinnedAccountList: ['0x2...', '0x0...', '0x1...'],
+        pinnedAccountList: [
+          '0xec1adf982415d2ef5ec55899b9bfb8bc0f29251b',
+          '0xeb9e64b93097bc15f01f13eae97015c57ab64823',
+        ],
       },
     };
     const expectedResult = [
-      '0x2...',
-      '0x0...',
-      '0x1...',
+      {
+        address: '0xec1adf982415d2ef5ec55899b9bfb8bc0f29251b',
+        balance: '0x0',
+        name: 'Test Account 2',
+        pinned: true,
+      },
+      {
+        address: '0xeb9e64b93097bc15f01f13eae97015c57ab64823',
+        balance: '0x0',
+        name: 'Test Account 3',
+        pinned: true,
+      },
       mockState.metamask.accounts,
     ];
     expect(
