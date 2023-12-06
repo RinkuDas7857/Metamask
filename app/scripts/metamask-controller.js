@@ -945,7 +945,7 @@ export default class MetamaskController extends EventEmitter {
           ),
         );
       }
-      ///: END:ONLY_INCLUDE_IN
+      ///: END:ONLY_INCLUDE_IF
     } else if (isManifestV3) {
       additionalKeyrings.push(
         hardwareKeyringBuilderFactory(TrezorKeyring, TrezorOffscreenBridge),
