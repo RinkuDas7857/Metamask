@@ -14,11 +14,11 @@ import { useI18nContext } from '../../../hooks/useI18nContext';
 import { useTransactionModalContext } from '../../../contexts/transaction-modal';
 import EditGasFeeButton from '../edit-gas-fee-button';
 import GasDetailsItem from '../gas-details-item';
-import Box from '../../ui/box';
 import InfoTooltip from '../../ui/info-tooltip';
 import AppLoadingSpinner from '../app-loading-spinner';
 import {
   Text,
+  Box,
   Button,
   ButtonLink,
   Modal,
@@ -96,15 +96,11 @@ const CancelSpeedupPopover = () => {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader
-          onClose={() => closeModal(['cancelSpeedUpTransaction'])}
-          marginBottom={4}
-        >
+        <ModalHeader onClose={() => closeModal(['cancelSpeedUpTransaction'])}>
           {editGasMode === EditGasModes.cancel
             ? `❌${t('cancel')}`
             : `🚀${t('speedUp')}`}
         </ModalHeader>
-
         <AppLoadingSpinner className="cancel-speedup-popover__spinner" />
         <div className="cancel-speedup-popover__wrapper">
           <Text

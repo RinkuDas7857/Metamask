@@ -180,10 +180,8 @@ export default function EditGasPopover({
     <Modal isOpen onClose={closePopover}>
       <ModalOverlay />
       <ModalContent autoFocus={false} className="edit-gas-popover">
-        <ModalHeader onClose={closePopover} marginBottom={4}>
-          {title}
-        </ModalHeader>
-        <div className="edit-gas-popover__edit-gas-display">
+        <ModalHeader onClose={closePopover}>{title}</ModalHeader>
+        <ModalBody>
           {process.env.IN_TEST ? null : <LoadingHeartBeat />}
           <EditGasDisplay
             dappSuggestedGasFeeAcknowledged={dappSuggestedGasFeeAcknowledged}
@@ -205,17 +203,20 @@ export default function EditGasPopover({
             gasErrors={gasErrors}
             {...editGasDisplayProps}
           />
-        </div>
-        <Button
-          block
-          variant={ButtonVariant.Primary}
-          size={ButtonSize.LG}
-          marginTop={4}
-          onClick={onSubmit}
-          disabled={hasGasErrors || balanceError || !txParamsHaveBeenCustomized}
-        >
-          {footerButtonText}
-        </Button>
+        </ModalBody>
+        <Box padding={4}>
+          <Button
+            block
+            variant={ButtonVariant.Primary}
+            size={ButtonSize.LG}
+            onClick={onSubmit}
+            disabled={
+              hasGasErrors || balanceError || !txParamsHaveBeenCustomized
+            }
+          >
+            {footerButtonText}
+          </Button>
+        </Box>
       </ModalContent>
     </Modal>
   );

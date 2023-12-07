@@ -8,6 +8,7 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
+  ModalBody,
   Text,
 } from '../../component-library';
 import { useI18nContext } from '../../../hooks/useI18nContext';
@@ -42,12 +43,12 @@ export default function ConfigureSnapPopup({
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader onClose={onClose} marginBottom={4}>
+        <ModalHeader onClose={onClose}>
           {type === ConfigureSnapPopupType.CONFIGURE
             ? t('configureSnapPopupTitle')
             : t('configureSnapPopupInstallTitle')}
         </ModalHeader>
-        <Box
+        <ModalBody
           display={Display.Flex}
           flexDirection={FlexDirection.Column}
           justifyContent={JustifyContent.flexStart}
@@ -82,7 +83,7 @@ export default function ConfigureSnapPopup({
           >
             {link}
           </Button>
-        </Box>
+        </ModalBody>
       </ModalContent>
     </Modal>
   );

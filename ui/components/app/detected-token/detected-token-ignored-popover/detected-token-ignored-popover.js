@@ -14,9 +14,9 @@ import {
   ModalContent,
   ModalHeader,
   Button,
-  BUTTON_VARIANT,
+  ButtonVariant,
+  ButtonSize,
   Box,
-  BUTTON_SIZES,
 } from '../../../component-library';
 
 const DetectedTokenIgnoredPopover = ({
@@ -39,36 +39,39 @@ const DetectedTokenIgnoredPopover = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader marginBottom={4}>
+        <ModalHeader>
           {partiallyIgnoreDetectedTokens
             ? t('importSelectedTokens')
             : t('areYouSure')}
         </ModalHeader>
-        <Text marginBottom={4}>
-          {partiallyIgnoreDetectedTokens
-            ? t('importSelectedTokensDescription')
-            : t('ignoreTokenWarning')}
-        </Text>
+        <ModalBody>
+          <Text marginBottom={4}>
+            {partiallyIgnoreDetectedTokens
+              ? t('importSelectedTokensDescription')
+              : t('ignoreTokenWarning')}
+          </Text>
+        </ModalBody>
         <Box
           display={Display.Flex}
           justifyContent={JustifyContent.center}
           gap={4}
+          padding={4}
         >
           <Button
             className="detected-token-ignored-popover__ignore-button"
             block
-            variant={BUTTON_VARIANT.SECONDARY}
+            variant={ButtonVariant.Secondary}
             onClick={onCancelIgnore}
-            size={BUTTON_SIZES.LG}
+            size={ButtonSize.Lg}
           >
             {t('cancel')}
           </Button>
           <Button
             className="detected-token-ignored-popover__import-button"
             block
-            variant={BUTTON_VARIANT.PRIMARY}
+            variant={ButtonVariant.Primary}
             onClick={handleClearTokensSelection}
-            size={BUTTON_SIZES.LG}
+            size={ButtonSize.Lg}
           >
             {t('confirm')}
           </Button>

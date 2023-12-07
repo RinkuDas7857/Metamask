@@ -15,8 +15,8 @@ import {
 import {
   Box,
   Button,
-  BUTTON_SIZES,
-  BUTTON_VARIANT,
+  ButtonSize,
+  ButtonVariant,
   Icon,
   IconName,
   IconSize,
@@ -59,7 +59,7 @@ const ConfirmationWarningModal = ({ onSubmit, onCancel }) => {
             {t('addEthereumChainWarningModalTitle')}
           </Text>
         </ModalHeader>
-        <Box marginBottom={4}>
+        <ModalBody>
           <Text marginTop={4} variant={TextVariant.bodySm}>
             {t('addEthereumChainWarningModalHeader', [
               <strong key="part-2">
@@ -81,22 +81,22 @@ const ConfirmationWarningModal = ({ onSubmit, onCancel }) => {
               {t('addEthereumChainWarningModalListPointThree')}
             </Text>
           </ul>
-        </Box>
+        </ModalBody>
         <Box display={Display.Flex} gap={4}>
           <Button
-            variant={BUTTON_VARIANT.SECONDARY}
+            variant={ButtonVariant.Secondary}
             onClick={onCancel}
             block
-            size={BUTTON_SIZES.LG}
+            size={ButtonSize.Lg}
           >
             {t('reject')}
           </Button>
           <Button
-            variant={BUTTON_VARIANT.PRIMARY}
+            variant={ButtonVariant.Primary}
             onClick={onSubmit}
             danger
             block
-            size={BUTTON_SIZES.LG}
+            size={ButtonSize.Lg}
           >
             {t('approveButtonText')}
           </Button>

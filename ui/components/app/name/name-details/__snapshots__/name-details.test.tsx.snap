@@ -30,11 +30,11 @@ exports[`NameDetails renders proposed names 1`] = `
       >
         <section
           aria-modal="true"
-          class="mm-box mm-modal-content__dialog mm-modal-content__dialog--size-sm mm-box--padding-4 mm-box--width-full mm-box--background-color-background-default mm-box--rounded-lg"
+          class="mm-box mm-modal-content__dialog mm-modal-content__dialog--size-sm mm-box--display-flex mm-box--flex-direction-column mm-box--width-full mm-box--background-color-background-default mm-box--rounded-lg"
           role="dialog"
         >
           <div
-            class="mm-box mm-header-base mm-modal-header mm-box--display-flex mm-box--justify-content-space-between"
+            class="mm-box mm-header-base mm-modal-header mm-box--padding-4 mm-box--display-flex mm-box--justify-content-space-between"
           >
             <div
               class="mm-box"
@@ -51,7 +51,7 @@ exports[`NameDetails renders proposed names 1`] = `
               </button>
             </div>
             <div
-              class="mm-box"
+              class="mm-box mm-box--width-full"
             >
               <header
                 class="mm-box mm-text mm-text--heading-sm mm-text--text-align-center mm-box--color-text-default"
@@ -254,11 +254,11 @@ exports[`NameDetails renders with no saved name 1`] = `
       >
         <section
           aria-modal="true"
-          class="mm-box mm-modal-content__dialog mm-modal-content__dialog--size-sm mm-box--padding-4 mm-box--width-full mm-box--background-color-background-default mm-box--rounded-lg"
+          class="mm-box mm-modal-content__dialog mm-modal-content__dialog--size-sm mm-box--display-flex mm-box--flex-direction-column mm-box--width-full mm-box--background-color-background-default mm-box--rounded-lg"
           role="dialog"
         >
           <div
-            class="mm-box mm-header-base mm-modal-header mm-box--display-flex mm-box--justify-content-space-between"
+            class="mm-box mm-header-base mm-modal-header mm-box--padding-4 mm-box--display-flex mm-box--justify-content-space-between"
           >
             <div
               class="mm-box"
@@ -275,7 +275,7 @@ exports[`NameDetails renders with no saved name 1`] = `
               </button>
             </div>
             <div
-              class="mm-box"
+              class="mm-box mm-box--width-full"
             >
               <header
                 class="mm-box mm-text mm-text--heading-sm mm-text--text-align-center mm-box--color-text-default"
@@ -447,11 +447,11 @@ exports[`NameDetails renders with saved name 1`] = `
       >
         <section
           aria-modal="true"
-          class="mm-box mm-modal-content__dialog mm-modal-content__dialog--size-sm mm-box--padding-4 mm-box--width-full mm-box--background-color-background-default mm-box--rounded-lg"
+          class="mm-box mm-modal-content__dialog mm-modal-content__dialog--size-sm mm-box--display-flex mm-box--flex-direction-column mm-box--width-full mm-box--background-color-background-default mm-box--rounded-lg"
           role="dialog"
         >
           <div
-            class="mm-box mm-header-base mm-modal-header mm-box--display-flex mm-box--justify-content-space-between"
+            class="mm-box mm-header-base mm-modal-header mm-box--padding-4 mm-box--display-flex mm-box--justify-content-space-between"
           >
             <div
               class="mm-box"
@@ -468,7 +468,7 @@ exports[`NameDetails renders with saved name 1`] = `
               </button>
             </div>
             <div
-              class="mm-box"
+              class="mm-box mm-box--width-full"
             >
               <header
                 class="mm-box mm-text mm-text--heading-sm mm-text--text-align-center mm-box--color-text-default"

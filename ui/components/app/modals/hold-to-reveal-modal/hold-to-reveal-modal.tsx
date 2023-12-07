@@ -16,6 +16,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  ModalBody,
 } from '../../../component-library';
 import HoldToRevealButton from '../../hold-to-reveal-button';
 
@@ -106,13 +107,13 @@ export default function HoldToRevealModal({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader onClose={onClose}>{t(holdToRevealTitle)}</ModalHeader>
-        <Box display={Display.Flex} flexDirection={FlexDirection.Column}>
+        <ModalBody display={Display.Flex} flexDirection={FlexDirection.Column}>
           <MainContent />
           <HoldToRevealButton
             buttonText={t(holdToRevealButton)}
             onLongPressed={onLongPressed}
           />
-        </Box>
+        </ModalBody>
       </ModalContent>
     </Modal>
   );
