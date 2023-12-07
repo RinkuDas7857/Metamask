@@ -23,6 +23,7 @@ export const ModalHeader: React.FC<ModalHeaderProps> = ({
   return (
     <HeaderBase
       className={classnames('mm-modal-header', className)}
+      padding={4}
       startAccessory={
         startAccessory ||
         (onBack && (
